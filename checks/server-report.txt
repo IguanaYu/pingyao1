@@ -1,0 +1,13 @@
+> chenghuang-temple-demo-server@1.0.0 test
+> npm run build && node --test test/integration.test.mjs
+
+已验证：两设备等价SDK互见移动、四仪式、鲜花果盘、晚加入、起身、退出与重新进入。
+✔ 真实 SDK：同院移动、四项仪式、晚加入及离开清理 (37411.627ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 38573.0863

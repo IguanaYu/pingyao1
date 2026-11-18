@@ -1,0 +1,16 @@
+[Unit]
+Description=Chenghuang Temple Multiplayer Demo
+After=network.target
+
+[Service]
+Type=simple
+User=temple
+WorkingDirectory=/opt/temple-demo/server
+Environment=NODE_ENV=production
+Environment=PORT=2567
+ExecStart=/usr/bin/node dist/index.js
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

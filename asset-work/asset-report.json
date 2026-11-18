@@ -1,0 +1,216 @@
+[
+  {
+    "file": "client\\assets\\resources\\models\\temple\\temple.gltf",
+    "scene": "Temple",
+    "triangles": 257766,
+    "nodes": [
+      {
+        "name": "Aux_Land_SevenPhotographedFigures",
+        "triangles": 14456
+      },
+      {
+        "name": "Aux_SixCao_FivePhotographedOfficials",
+        "triangles": 14536
+      },
+      {
+        "name": "Aux_SixCao_PhotographedBlackAndWhiteFigures",
+        "triangles": 4668
+      },
+      {
+        "name": "Chenghuang_main_hall",
+        "triangles": 9774
+      },
+      {
+        "name": "East_six_offices",
+        "triangles": 11434
+      },
+      {
+        "name": "Entry_bell_pavilion",
+        "triangles": 5936
+      },
+      {
+        "name": "Entry_drum_pavilion",
+        "triangles": 6755
+      },
+      {
+        "name": "Entry_paifang",
+        "triangles": 23972
+      },
+      {
+        "name": "Entry_shanmen",
+        "triangles": 10512
+      },
+      {
+        "name": "Entry_theatre",
+        "triangles": 35458
+      },
+      {
+        "name": "Ground_and_street",
+        "triangles": 37956
+      },
+      {
+        "name": "Main_courtyard_furnishings",
+        "triangles": 5350
+      },
+      {
+        "name": "Ornament_Chenghuang_dragon_vertical_plaque",
+        "triangles": 4708
+      },
+      {
+        "name": "Ornament_MainHall_dougong_and_frieze_R01",
+        "triangles": 8896
+      },
+      {
+        "name": "Ornament_MainHall_ridge_R12_R15",
+        "triangles": 4626
+      },
+      {
+        "name": "Ornament_Xiandian_brackets_R14",
+        "triangles": 5452
+      },
+      {
+        "name": "Qingong_two_storey",
+        "triangles": 14880
+      },
+      {
+        "name": "Statue_Chenghuang",
+        "triangles": 2559
+      },
+      {
+        "name": "Statues_MainHall_Officials",
+        "triangles": 5910
+      },
+      {
+        "name": "Statues_MainHall_Warriors",
+        "triangles": 5066
+      },
+      {
+        "name": "West_land_temple",
+        "triangles": 11434
+      },
+      {
+        "name": "Xiandian_open_hall",
+        "triangles": 13428
+      }
+    ]
+  },
+  {
+    "file": "client\\assets\\resources\\models\\visitor\\visitor.gltf",
+    "scene": "Visitor",
+    "triangles": 9482,
+    "nodes": [
+      {
+        "name": "Collar_InnerLeft",
+        "triangles": 132
+      },
+      {
+        "name": "Collar_InnerRight",
+        "triangles": 132
+      },
+      {
+        "name": "Cuff_L",
+        "triangles": 76
+      },
+      {
+        "name": "Cuff_R",
+        "triangles": 76
+      },
+      {
+        "name": "Ear_L",
+        "triangles": 288
+      },
+      {
+        "name": "Ear_R",
+        "triangles": 288
+      },
+      {
+        "name": "Eye_L",
+        "triangles": 352
+      },
+      {
+        "name": "Eye_R",
+        "triangles": 352
+      },
+      {
+        "name": "Hair_Cap",
+        "triangles": 998
+      },
+      {
+        "name": "Hair_Topknot",
+        "triangles": 720
+      },
+      {
+        "name": "Hairpin",
+        "triangles": 44
+      },
+      {
+        "name": "Hairpin_End",
+        "triangles": 168
+      },
+      {
+        "name": "Hand_L",
+        "triangles": 440
+      },
+      {
+        "name": "Hand_R",
+        "triangles": 440
+      },
+      {
+        "name": "Head",
+        "triangles": 1216
+      },
+      {
+        "name": "Lapel_LeftEdge",
+        "triangles": 156
+      },
+      {
+        "name": "Neck",
+        "triangles": 440
+      },
+      {
+        "name": "Sash_Tail",
+        "triangles": 132
+      },
+      {
+        "name": "Shoe_L",
+        "triangles": 440
+      },
+      {
+        "name": "Shoe_R",
+        "triangles": 440
+      },
+      {
+        "name": "Sleeve_L",
+        "triangles": 196
+      },
+      {
+        "name": "Sleeve_R",
+        "triangles": 196
+      },
+      {
+        "name": "Sole_L",
+        "triangles": 440
+      },
+      {
+        "name": "Sole_R",
+        "triangles": 440
+      },
+      {
+        "name": "Trouser_L",
+        "triangles": 156
+      },
+      {
+        "name": "Trouser_R",
+        "triangles": 156
+      },
+      {
+        "name": "Tunic_Main",
+        "triangles": 380
+      },
+      {
+        "name": "Waist_Sash",
+        "triangles": 188
+      }
+    ]
+  }
+]

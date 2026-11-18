@@ -1,0 +1,28 @@
+{
+  "clientDate": "2026-11-19",
+  "command": "npm test",
+  "nodeVersion": "24.13.0",
+  "tests": 1,
+  "pass": 1,
+  "fail": 0,
+  "durationMs": 38573.0863,
+  "exitCode": 0,
+  "scope": "real SDK integration, not physical phones or load testing",
+  "checks": [
+    "same-room join and movement",
+    "reject out-of-bounds and distant action",
+    "in-place incense without changing position or occupying a station",
+    "bow start and completion",
+    "flower and fruit placement",
+    "sit and stand",
+    "late-join complete public and player state",
+    "leave cleanup and new-session entry"
+  ],
+  "artifacts": [
+    "dist/index.js",
+    "dist/TempleRoom.js",
+    "dist/state.js",
+    "dist/scene.js",
+    "package-lock.json"
+  ]
+}

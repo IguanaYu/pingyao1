@@ -1,0 +1,14 @@
+{
+  "__version__": "1.0.0",
+  "general": {
+    "designResolution": {
+      "width": 1280,
+      "height": 800,
+      "fitWidth": true,
+      "fitHeight": true
+    }
+  },
+  "preview": {
+    "currentScene": "d287a97f-c56c-45ad-950c-a12cc05a287e"
+  }
+}

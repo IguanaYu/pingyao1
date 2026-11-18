@@ -1,0 +1,620 @@
+{
+  "version": 1,
+  "units": "meters",
+  "coordinates": "Y up; north -Z; visitor faces +Z at yaw 0",
+  "bounds": {
+    "xMin": -15.3,
+    "xMax": 15.3,
+    "zMin": -24.25,
+    "zMax": 24
+  },
+  "groundY": 0.08,
+  "playerRadius": 0.2,
+  "spawn": [
+    4,
+    0.08,
+    4.2
+  ],
+  "spawnYaw": 3.141592653589793,
+  "surfaces": [
+    {
+      "id": "xiandian-floor",
+      "xMin": -9.85,
+      "xMax": 9.85,
+      "zMin": -15.45,
+      "zMax": -8.35,
+      "height": 0.94
+    },
+    {
+      "id": "mainhall-floor",
+      "xMin": -9.85,
+      "xMax": 9.85,
+      "zMin": -24.95,
+      "zMax": -17.65,
+      "height": 0.94
+    }
+  ],
+  "ramps": [
+    {
+      "id": "xiandian-ramp",
+      "xMin": -1.85,
+      "xMax": 1.85,
+      "zMin": -8.4,
+      "zMax": -5.6,
+      "lowZ": -5.6,
+      "highZ": -8.4,
+      "lowY": 0.08,
+      "highY": 0.94
+    },
+    {
+      "id": "mainhall-ramp",
+      "xMin": -1.75,
+      "xMax": 1.75,
+      "zMin": -17.75,
+      "zMax": -14.85,
+      "lowZ": -14.85,
+      "highZ": -17.75,
+      "lowY": 0.08,
+      "highY": 0.94
+    },
+    {
+      "id": "xiandian-rear-connector",
+      "xMin": -1.65,
+      "xMax": 1.65,
+      "zMin": -16.3,
+      "zMax": -15.45,
+      "lowZ": -16.3,
+      "highZ": -15.45,
+      "lowY": 0.51,
+      "highY": 0.94
+    }
+  ],
+  "collisions": [
+    {
+      "id": "Entry_theatre_29",
+      "xMin": -6.3,
+      "xMax": -1.7,
+      "zMin": 20.65,
+      "zMax": 25.35,
+      "yMin": 0.0,
+      "yMax": 2.46
+    },
+    {
+      "id": "Entry_theatre_31",
+      "xMin": 1.7,
+      "xMax": 6.3,
+      "zMin": 20.65,
+      "zMax": 25.35,
+      "yMin": 0.0,
+      "yMax": 2.46
+    },
+    {
+      "id": "Entry_bell_pavilion_46",
+      "xMin": 10.525,
+      "xMax": 11.45,
+      "zMin": 21.45,
+      "zMax": 24.55,
+      "yMin": -0.0,
+      "yMax": 3.05
+    },
+    {
+      "id": "Entry_bell_pavilion_47",
+      "xMin": 13.55,
+      "xMax": 14.475,
+      "zMin": 21.45,
+      "zMax": 24.55,
+      "yMin": -0.0,
+      "yMax": 3.05
+    },
+    {
+      "id": "Entry_bell_pavilion_48",
+      "xMin": 11.45,
+      "xMax": 13.55,
+      "zMin": 21.45,
+      "zMax": 24.55,
+      "yMin": 2.17,
+      "yMax": 3.05
+    },
+    {
+      "id": "Entry_drum_pavilion_53",
+      "xMin": -14.475,
+      "xMax": -13.55,
+      "zMin": 21.45,
+      "zMax": 24.55,
+      "yMin": -0.0,
+      "yMax": 3.05
+    },
+    {
+      "id": "Entry_drum_pavilion_54",
+      "xMin": -11.45,
+      "xMax": -10.525,
+      "zMin": 21.45,
+      "zMax": 24.55,
+      "yMin": -0.0,
+      "yMax": 3.05
+    },
+    {
+      "id": "Entry_drum_pavilion_55",
+      "xMin": -13.55,
+      "xMax": -11.45,
+      "zMin": 21.45,
+      "zMax": 24.55,
+      "yMin": 2.17,
+      "yMax": 3.05
+    },
+    {
+      "id": "Xiandian_open_hall_78",
+      "xMin": -8.66,
+      "xMax": -8.34,
+      "zMin": -9.56,
+      "zMax": -9.24,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_79",
+      "xMin": -8.66,
+      "xMax": -8.34,
+      "zMin": -14.81,
+      "zMax": -14.49,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_80",
+      "xMin": -5.26,
+      "xMax": -4.94,
+      "zMin": -9.56,
+      "zMax": -9.24,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_81",
+      "xMin": -5.26,
+      "xMax": -4.94,
+      "zMin": -14.81,
+      "zMax": -14.49,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_82",
+      "xMin": -1.86,
+      "xMax": -1.54,
+      "zMin": -9.56,
+      "zMax": -9.24,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_83",
+      "xMin": -1.86,
+      "xMax": -1.54,
+      "zMin": -14.81,
+      "zMax": -14.49,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_84",
+      "xMin": 1.54,
+      "xMax": 1.86,
+      "zMin": -9.56,
+      "zMax": -9.24,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_85",
+      "xMin": 1.54,
+      "xMax": 1.86,
+      "zMin": -14.81,
+      "zMax": -14.49,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_86",
+      "xMin": 4.94,
+      "xMax": 5.26,
+      "zMin": -9.56,
+      "zMax": -9.24,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_87",
+      "xMin": 4.94,
+      "xMax": 5.26,
+      "zMin": -14.81,
+      "zMax": -14.49,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_88",
+      "xMin": 8.34,
+      "xMax": 8.66,
+      "zMin": -9.56,
+      "zMax": -9.24,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_89",
+      "xMin": 8.34,
+      "xMax": 8.66,
+      "zMin": -14.81,
+      "zMax": -14.49,
+      "yMin": 0.94,
+      "yMax": 4.6
+    },
+    {
+      "id": "Xiandian_open_hall_90",
+      "xMin": -2.33,
+      "xMax": -1.97,
+      "zMin": -7.06,
+      "zMax": -6.7,
+      "yMin": 0.94,
+      "yMax": 4.8
+    },
+    {
+      "id": "Xiandian_open_hall_91",
+      "xMin": 1.97,
+      "xMax": 2.33,
+      "zMin": -7.06,
+      "zMax": -6.7,
+      "yMin": 0.94,
+      "yMax": 4.8
+    },
+    {
+      "id": "Xiandian_open_hall_93",
+      "xMin": -9.2,
+      "xMax": -2.2,
+      "zMin": -8.52,
+      "zMax": -8.38,
+      "yMin": 1.55,
+      "yMax": 1.67
+    },
+    {
+      "id": "Xiandian_open_hall_94",
+      "xMin": 2.2,
+      "xMax": 9.2,
+      "zMin": -8.52,
+      "zMax": -8.38,
+      "yMin": 1.55,
+      "yMax": 1.67
+    },
+    {
+      "id": "Xiandian_open_hall_95",
+      "xMin": -2.2,
+      "xMax": 2.2,
+      "zMin": -13.125,
+      "zMax": -12.275,
+      "yMin": 1.665,
+      "yMax": 1.815
+    },
+    {
+      "id": "Chenghuang_main_hall_99",
+      "xMin": -9.38,
+      "xMax": -9.12,
+      "zMin": -24.75,
+      "zMax": -17.85,
+      "yMin": 0.925,
+      "yMax": 5.075
+    },
+    {
+      "id": "Chenghuang_main_hall_100",
+      "xMin": 9.12,
+      "xMax": 9.38,
+      "zMin": -24.75,
+      "zMax": -17.85,
+      "yMin": 0.925,
+      "yMax": 5.075
+    },
+    {
+      "id": "Chenghuang_main_hall_101",
+      "xMin": -8.66,
+      "xMax": -8.34,
+      "zMin": -18.46,
+      "zMax": -18.14,
+      "yMin": 0.94,
+      "yMax": 4.95
+    },
+    {
+      "id": "Chenghuang_main_hall_102",
+      "xMin": -5.26,
+      "xMax": -4.94,
+      "zMin": -18.46,
+      "zMax": -18.14,
+      "yMin": 0.94,
+      "yMax": 4.95
+    },
+    {
+      "id": "Chenghuang_main_hall_103",
+      "xMin": -1.86,
+      "xMax": -1.54,
+      "zMin": -18.46,
+      "zMax": -18.14,
+      "yMin": 0.94,
+      "yMax": 4.95
+    },
+    {
+      "id": "Chenghuang_main_hall_104",
+      "xMin": 1.54,
+      "xMax": 1.86,
+      "zMin": -18.46,
+      "zMax": -18.14,
+      "yMin": 0.94,
+      "yMax": 4.95
+    },
+    {
+      "id": "Chenghuang_main_hall_105",
+      "xMin": 4.94,
+      "xMax": 5.26,
+      "zMin": -18.46,
+      "zMax": -18.14,
+      "yMin": 0.94,
+      "yMax": 4.95
+    },
+    {
+      "id": "Chenghuang_main_hall_106",
+      "xMin": 8.34,
+      "xMax": 8.66,
+      "zMin": -18.46,
+      "zMax": -18.14,
+      "yMin": 0.94,
+      "yMax": 4.95
+    },
+    {
+      "id": "Chenghuang_main_hall_107",
+      "xMin": -8.45,
+      "xMax": -5.25,
+      "zMin": -19.49,
+      "zMax": -19.31,
+      "yMin": 1.0,
+      "yMax": 4.4
+    },
+    {
+      "id": "Chenghuang_main_hall_108",
+      "xMin": -5.05,
+      "xMax": -1.85,
+      "zMin": -19.49,
+      "zMax": -19.31,
+      "yMin": 1.0,
+      "yMax": 4.4
+    },
+    {
+      "id": "Chenghuang_main_hall_109",
+      "xMin": 1.85,
+      "xMax": 5.05,
+      "zMin": -19.49,
+      "zMax": -19.31,
+      "yMin": 1.0,
+      "yMax": 4.4
+    },
+    {
+      "id": "Chenghuang_main_hall_110",
+      "xMin": 5.25,
+      "xMax": 8.45,
+      "zMin": -19.49,
+      "zMax": -19.31,
+      "yMin": 1.0,
+      "yMax": 4.4
+    },
+    {
+      "id": "Chenghuang_main_hall_112",
+      "xMin": -2.0,
+      "xMax": 2.0,
+      "zMin": -22.525,
+      "zMax": -21.675,
+      "yMin": 1.665,
+      "yMax": 1.815
+    },
+    {
+      "id": "Main_courtyard_furnishings_300",
+      "xMin": -0.9,
+      "xMax": 0.9,
+      "zMin": -1.7,
+      "zMax": 0.1,
+      "yMin": 0.08,
+      "yMax": 1.28
+    },
+    {
+      "id": "Main_courtyard_furnishings_301",
+      "xMin": -2.2,
+      "xMax": 2.2,
+      "zMin": 8.3,
+      "zMax": 12.7,
+      "yMin": 0.08,
+      "yMax": 0.86
+    },
+    {
+      "id": "Main_courtyard_furnishings_302",
+      "xMin": -7.4,
+      "xMax": -6.6,
+      "zMin": -4.7,
+      "zMax": -3.9,
+      "yMin": 0.08,
+      "yMax": 1.38
+    },
+    {
+      "id": "Main_courtyard_furnishings_303",
+      "xMin": 6.6,
+      "xMax": 7.4,
+      "zMin": -4.7,
+      "zMax": -3.9,
+      "yMin": 0.08,
+      "yMax": 1.38
+    },
+    {
+      "id": "Main_courtyard_furnishings_304",
+      "xMin": 7.05,
+      "xMax": 8.95,
+      "zMin": -5.6,
+      "zMax": -4.4,
+      "yMin": 0.05,
+      "yMax": 0.75
+    },
+    {
+      "id": "Main_courtyard_furnishings_305",
+      "xMin": 7.3,
+      "xMax": 8.7,
+      "zMin": -5.25,
+      "zMax": -4.75,
+      "yMin": 0.7,
+      "yMax": 2.9
+    }
+  ],
+  "stations": [
+    {
+      "id": "offering",
+      "kind": "offering",
+      "name": "献供",
+      "position": [
+        0,
+        0.94,
+        -11.6
+      ],
+      "yaw": 3.141592653589793,
+      "radius": 2.4,
+      "flowerPosition": [
+        -0.72,
+        1.82,
+        -12.7
+      ],
+      "fruitPosition": [
+        0.72,
+        1.82,
+        -12.7
+      ]
+    },
+    {
+      "id": "bow",
+      "kind": "bow",
+      "name": "礼敬",
+      "position": [
+        0,
+        0.94,
+        -18.8
+      ],
+      "yaw": 3.141592653589793,
+      "radius": 2.4
+    },
+    {
+      "id": "sit",
+      "kind": "sit",
+      "name": "静坐",
+      "position": [
+        -11,
+        0.08,
+        -5
+      ],
+      "yaw": 1.5707963267948966,
+      "radius": 2.4
+    },
+    {
+      "id": "sit-2",
+      "kind": "sit",
+      "name": "静坐",
+      "position": [
+        -11,
+        0.08,
+        -6.25
+      ],
+      "yaw": 1.5707963267948966,
+      "radius": 2.4
+    },
+    {
+      "id": "sit-3",
+      "kind": "sit",
+      "name": "静坐",
+      "position": [
+        -11,
+        0.08,
+        -3.75
+      ],
+      "yaw": 1.5707963267948966,
+      "radius": 2.4
+    }
+  ],
+  "demoRoute": [
+    "incense",
+    "offering",
+    "bow",
+    "sit"
+  ],
+  "connectionSteps": [
+    {
+      "id": "RearConnectionStep1",
+      "position": [
+        0,
+        0.4885,
+        -15.535
+      ],
+      "size": [
+        3.3,
+        0.817,
+        0.17
+      ],
+      "color": "#AAA898"
+    },
+    {
+      "id": "RearConnectionStep2",
+      "position": [
+        0,
+        0.4455,
+        -15.705
+      ],
+      "size": [
+        3.3,
+        0.731,
+        0.17
+      ],
+      "color": "#AAA898"
+    },
+    {
+      "id": "RearConnectionStep3",
+      "position": [
+        0,
+        0.4025,
+        -15.875
+      ],
+      "size": [
+        3.3,
+        0.645,
+        0.17
+      ],
+      "color": "#AAA898"
+    },
+    {
+      "id": "RearConnectionStep4",
+      "position": [
+        0,
+        0.3595,
+        -16.045
+      ],
+      "size": [
+        3.3,
+        0.559,
+        0.17
+      ],
+      "color": "#AAA898"
+    },
+    {
+      "id": "RearConnectionStep5",
+      "position": [
+        0,
+        0.3165,
+        -16.215
+      ],
+      "size": [
+        3.3,
+        0.473,
+        0.17
+      ],
+      "color": "#AAA898"
+    }
+  ]
+}

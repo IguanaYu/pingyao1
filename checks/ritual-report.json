@@ -1,0 +1,16 @@
+{
+  "testedAt": "2026-11-17T15:57:25.683Z",
+  "browser": "Chrome headless / software WebGL",
+  "actualPhones": false,
+  "walkedRoute": true,
+  "incense": true,
+  "flower": true,
+  "fruit": true,
+  "bow": true,
+  "sit": true,
+  "standUp": true,
+  "lateJoinState": true,
+  "remoteStateObserved": true,
+  "disconnectAndReenter": true,
+  "errors": []
+}

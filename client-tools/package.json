@@ -1,0 +1,16 @@
+{
+  "name": "client-tools",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Optional local browser demonstration checks",
+  "scripts": {
+    "check:demo": "node ../checks/click-move-demo.cjs",
+    "check:browser": "npm run check:demo",
+    "check:rituals": "npm run check:demo"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "esbuild": "0.28.2",
+    "playwright-core": "1.65.1"
+  }
+}

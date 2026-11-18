@@ -1,0 +1,29 @@
+# Local tools and dependencies
+/tooling/
+node_modules/
+.npm-cache/
+.npmrc
+/client/library/
+/client/temp/
+/client/local/
+/client/build/
+/client/native/
+/client/profiles/
+__pycache__/
+*.pyc
+*.log
+*.blend1
+*.zip
+
+# Local settings and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

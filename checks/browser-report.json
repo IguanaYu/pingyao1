@@ -1,0 +1,23 @@
+{
+  "testedAt": "2026-11-17T15:58:45.676Z",
+  "engine": "Cocos Creator 3.8.8",
+  "browser": "Chrome headless / software WebGL",
+  "actualPhones": false,
+  "actualPublicHosting": false,
+  "clients": 2,
+  "desktopViewport": "1440x900",
+  "mobileViewport": "390x844",
+  "joined": true,
+  "remoteMovementReceived": true,
+  "movement": {
+    "before": {
+      "x": 4,
+      "z": 4.199999809265137
+    },
+    "after": {
+      "x": 2.5119999999999987,
+      "z": 4.199999809265137
+    }
+  },
+  "errors": []
+}

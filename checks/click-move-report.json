@@ -1,0 +1,19 @@
+{
+  "testedAt": "2026-11-18T22:40:29.686Z",
+  "browser": "Chrome headless / software WebGL",
+  "clients": 2,
+  "desktopClick": true,
+  "mobileTap": true,
+  "mobileDragTurnsOnly": true,
+  "keyboardRemoved": true,
+  "remoteMovement": true,
+  "cancelApproach": true,
+  "incenseInPlace": true,
+  "heldIncenseRemote": true,
+  "offeringAndBowOnArrival": true,
+  "flowersAndFruit": true,
+  "separateCushions": true,
+  "standingUp": true,
+  "actualPhones": false,
+  "errors": []
+}
