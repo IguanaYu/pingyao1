@@ -1,6 +1,6 @@
-import {_decorator,Component,Node,Camera,DirectionalLight,Color,Vec3,resources,JsonAsset,Prefab,director} from 'cc';
+import {_decorator,Component,Node,Camera,DirectionalLight,Color,Vec3,resources,JsonAsset,Prefab,director,MeshRenderer} from 'cc';
 import {DemoInterface} from './Interface';
-import {DemoWorld,V} from './World';
+import {DemoWorld,V,material,shape} from './World';
 import {Navigation,floorHeight,type GroundPoint} from './Navigation';
 import {VisitorView} from './Visitors';
 const {ccclass}=_decorator;
@@ -32,9 +32,39 @@ export class TempleDemo extends Component {
       const prefabs=await new Promise<Prefab[]>((resolve,reject)=>resources.loadDir('models',Prefab,(e,a)=>e?reject(e):resolve(a)));
       const temple=prefabs.find(p=>/temple/i.test(p.name));this.visitorPrefab=prefabs.find(p=>/visitor/i.test(p.name))!;
       if(!temple||!this.visitorPrefab)throw new Error('模型未加载：'+prefabs.map(p=>p.name).join(','));
-      this.world=new DemoWorld(scene,this.data,temple);this.localPosition=V(this.data.spawn);this.localYaw=this.data.spawnYaw;this.updateCamera(1);this.ready=true;this.ui.setReady();
+      this.world=new DemoWorld(scene,this.data,temple);this.localPosition=V(this.data.spawn);this.localYaw=this.data.spawnYaw;this.updateCamera(1);this.cuteStatues();this.ready=true;this.ui.setReady();
       (window as any).templeDemo=this;
     }catch(e:any){console.error(e);this.ui.loading('庙院加载失败，请刷新后重试。'+(e.message||''));}
+  }
+  /** 神像萌化：隐藏旧脸/须发（按材质），换上与玩家一致的圆润头部。袍服、金冠等原样保留。 */
+  private static readonly HIDE_MATS=/^(st_(skin|pupil|lip|hair|white_hair)|aux_(skin|darkskin|redface|teeth|mouth|pale))/;
+  private static readonly CUTE_HEADS:[number,number,number,number,number,string,string][]=[
+    [0,2.93,-23.005,.235,0,'#7a4120','#080b09'],
+    [-2.5,2.705,-22.96,.227,0,'#855a33','#85866c'],
+    [2.5,2.705,-22.96,.227,0,'#6b3a22','#080b09'],
+    [-4.65,2.75,-22.98,.235,0,'#7d3a24','#080b09'],
+    [4.65,2.75,-22.98,.235,0,'#5c7a5a','#080b09'],
+    ...[10,7.5,5,2.4,0,-2.4,-4.8].map<any>(z=>[-19.04,2.33,z,.202,90,'#7c542c','#080b09']),
+    ...[[8.3,'#7d3a24'],[5.8,'#7c542c'],[3.3,'#7c542c'],[0.8,'#5a3f28'],[-1.7,'#7d3a24']].map<any>(([z,skin])=>[19.04,2.246,z,.213,-90,skin,'#080b09']),
+    [18.94,2.309,12,.222,-90,'#5a3f28','#080b09'],
+    [18.94,2.309,-5.4,.222,-90,'#a3834f','#080b09'],
+  ];
+  private cuteStatues(){
+    const ghost=material('#000000',0);
+    const visit=(n:Node)=>{n.children.forEach(visit);const r=n.getComponent(MeshRenderer);if(!r)return;
+      const mats=r.sharedMaterials;for(let i=0;i<mats.length;i++){const m=mats[i];if(m&&TempleDemo.HIDE_MATS.test(m.name))r.setMaterial(ghost,i);}};
+    visit(this.world.root);
+    const root=this.world.root;
+    TempleDemo.CUTE_HEADS.forEach(([x,y,z,r,yaw,skin,hair],i)=>{
+      const holder=new Node('CuteStatue'+i);root.addChild(holder);holder.setPosition(x,y,z);holder.setRotationFromEuler(0,yaw,0);
+      shape(holder,'head','sphere',skin,new Vec3(0,0,0),new Vec3(r*2.05,r*1.95,r*2.05));
+      shape(holder,'hair','sphere',hair,new Vec3(0,r*.34,-r*.06),new Vec3(r*2.1,r*1.28,r*2.1));
+      shape(holder,'topknot','sphere',hair,new Vec3(0,r*.88,-r*.12),new Vec3(r*.72,r*.6,r*.66));
+      shape(holder,'eyeL','sphere','#030505',new Vec3(-r*.30,r*.06,r*.95),new Vec3(r*.13,r*.17,r*.1));
+      shape(holder,'eyeR','sphere','#030505',new Vec3(r*.30,r*.06,r*.95),new Vec3(r*.13,r*.17,r*.1));
+      shape(holder,'earL','sphere',skin,new Vec3(-r*.99,-r*.02,-r*.08),new Vec3(r*.24,r*.38,r*.28));
+      shape(holder,'earR','sphere',skin,new Vec3(r*.99,-r*.02,-r*.08),new Vec3(r*.24,r*.38,r*.28));
+    });
   }
   async connect(nickname:string){if(!this.ready||this.joining)return;this.joining=true;this.ui.connecting();
     try{if(this.room){const old=this.room;this.room=null;await old.leave();}this.visitors.forEach((v,id)=>{v.destroy();this.ui.removeLabel(id);});this.visitors.clear();this.resetWalk();this.initialized=false;
