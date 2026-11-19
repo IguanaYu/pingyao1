@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "units": "meters",
   "coordinates": "Y up; north -Z; visitor faces +Z at yaw 0",
   "bounds": {
@@ -467,76 +467,62 @@
       "yMax": 2.9
     }
   ],
-  "stations": [
+  "spawnArea": {
+    "xMin": -3.5,
+    "xMax": 3.5,
+    "zMin": 15.5,
+    "zMax": 19.5
+  },
+  "zones": [
     {
-      "id": "offering",
       "kind": "offering",
       "name": "献供",
-      "position": [
-        0,
-        0.94,
-        -11.6
-      ],
       "yaw": 3.141592653589793,
-      "radius": 2.4,
-      "flowerPosition": [
-        -0.72,
-        1.82,
-        -12.7
-      ],
-      "fruitPosition": [
-        0.72,
-        1.82,
-        -12.7
-      ]
+      "spacing": 0.8,
+      "rect": {
+        "xMin": -3.2,
+        "xMax": 3.2,
+        "zMin": -12.0,
+        "zMax": -11.2
+      },
+      "placements": {
+        "flower": [
+          [-2.0, 1.82, -12.7],
+          [-1.5, 1.82, -12.7],
+          [-1.0, 1.82, -12.7],
+          [-0.5, 1.82, -12.7]
+        ],
+        "fruit": [
+          [0.5, 1.82, -12.7],
+          [1.0, 1.82, -12.7],
+          [1.5, 1.82, -12.7],
+          [2.0, 1.82, -12.7]
+        ]
+      }
     },
     {
-      "id": "bow",
       "kind": "bow",
       "name": "礼敬",
-      "position": [
-        0,
-        0.94,
-        -18.8
-      ],
       "yaw": 3.141592653589793,
-      "radius": 2.4
+      "spacing": 0.8,
+      "rect": {
+        "xMin": -3.4,
+        "xMax": 3.4,
+        "zMin": -19.0,
+        "zMax": -18.62
+      }
     },
     {
-      "id": "sit",
       "kind": "sit",
       "name": "静坐",
-      "position": [
-        -11,
-        0.08,
-        -5
-      ],
       "yaw": 1.5707963267948966,
-      "radius": 2.4
-    },
-    {
-      "id": "sit-2",
-      "kind": "sit",
-      "name": "静坐",
-      "position": [
-        -11,
-        0.08,
-        -6.25
-      ],
-      "yaw": 1.5707963267948966,
-      "radius": 2.4
-    },
-    {
-      "id": "sit-3",
-      "kind": "sit",
-      "name": "静坐",
-      "position": [
-        -11,
-        0.08,
-        -3.75
-      ],
-      "yaw": 1.5707963267948966,
-      "radius": 2.4
+      "spacing": 1.1,
+      "rect": {
+        "xMin": -13.6,
+        "xMax": -9.8,
+        "zMin": -7.4,
+        "zMax": -2.6
+      }
     }
   ],
   "demoRoute": [

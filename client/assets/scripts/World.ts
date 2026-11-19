@@ -1,4 +1,5 @@
 import { Node, MeshRenderer, Material, Color, Vec3, primitives, utils, Mesh, Camera, Prefab, instantiate } from 'cc';
+import { floorHeight } from './Navigation';
 
 export const V = (p: number[]) => new Vec3(p[0],p[1],p[2]);
 const materials=new Map<string,Material>(); const meshes=new Map<string,Mesh>();
@@ -7,12 +8,17 @@ export function shape(parent:Node,name:string,kind:string,color:string,pos:Vec3,
   const n=new Node(name);parent.addChild(n);n.setPosition(pos);n.setScale(scale);let mesh=meshes.get(kind);if(!mesh){const g=kind==='sphere'?primitives.sphere(.5,{segments:10}):kind==='cylinder'?primitives.cylinder(.5,.5,1,{radialSegments:12}):primitives.box();mesh=utils.createMesh(g);meshes.set(kind,mesh);}const r=n.addComponent(MeshRenderer);r.mesh=mesh;r.setMaterial(material(color,alpha),0);return n;
 }
 export class DemoWorld {
-  root:Node; private destination:Node; markers=new Map<string,Node>(); objects=new Map<string,Node>();
+  root:Node; private destination:Node; objects=new Map<string,Node>();
   constructor(parent:Node,public data:any,temple:Prefab) {this.root=new Node('TempleWorld');parent.addChild(this.root);this.root.addChild(instantiate(temple));
     this.destination=shape(this.root,'WalkDestination','cylinder','#e4c06b',new Vec3(),new Vec3(.56,.018,.56),.75);
     this.destination.active=false;
     for(const step of data.connectionSteps||[])shape(this.root,step.id,'box',step.color,V(step.position),V(step.size));
-    for(const s of data.stations){if(s.kind==='incense')continue;const marker=shape(this.root,'Marker_'+s.id,'cylinder','#c5ac70',V(s.position).add(new Vec3(0,.014,0)),new Vec3(.9,.018,.9),.5);this.markers.set(s.id,marker);if(s.kind==='sit'){shape(this.root,'蒲团_'+s.id,'cylinder','#b4aa79',V(s.position).add(new Vec3(0,.06,0)),new Vec3(.72,.12,.72));}}
+    // 区域制：每个仪式区域铺一块半透明指示垫，替代旧的固定站位圆标与蒲团。
+    for(const zone of data.zones||[]){
+      const w=zone.rect.xMax-zone.rect.xMin,d=zone.rect.zMax-zone.rect.zMin;
+      const cx=(zone.rect.xMin+zone.rect.xMax)/2,cz=(zone.rect.zMin+zone.rect.zMax)/2;
+      shape(this.root,'Zone_'+zone.kind,'box','#c5ac70',new Vec3(cx,floorHeight(data,cx,cz)+.012,cz),new Vec3(w,.016,d),.35);
+    }
   }
   showDestination(point:Vec3|null) { this.destination.active=!!point; if(point)this.destination.setPosition(point); }
   syncObjects(room:any) {

@@ -1,18 +1,21 @@
 import {Node, Prefab, instantiate, Vec3} from 'cc';
-import {DemoWorld} from './World';
+import {DemoWorld, shape} from './World';
 const degrees = 180 / Math.PI;
 function smooth(t:number) {t = Math.max(0, Math.min(1,t)); return t*t*(3-2*t);}
 function find(root:Node,name:string):Node|null {if(root.name===name)return root; for(const c of root.children){const n=find(c,name);if(n)return n;} return null;}
 
 export class VisitorView {
   node:Node; visual:Node; torso:Node|null; left:Node|null; right:Node|null;
-  legL:Node|null; legR:Node|null; head:Node|null; robe:Node|null; held:Node;
+  legL:Node|null; legR:Node|null; head:Node|null; robe:Node|null; held:Node; cushion:Node;
   private socketL:Node|null; private socketR:Node|null;
   private heldType=''; private phase=0;
   private handL=new Vec3(); private handR=new Vec3(); private handMid=new Vec3();
   constructor(parent:Node,prefab:Prefab,private world:DemoWorld) {
     this.node=new Node('Visitor'); parent.addChild(this.node);
     this.visual=instantiate(prefab); this.node.addChild(this.visual);
+    // 随身蒲团：静坐时“自己拿出来”，其余状态隐藏。
+    this.cushion=shape(this.node,'蒲团','cylinder','#b4aa79',new Vec3(0,.06,0),new Vec3(.72,.12,.72));
+    this.cushion.active=false;
     this.torso=find(this.visual,'Torso'); this.left=find(this.visual,'Arm_L'); this.right=find(this.visual,'Arm_R');
     this.legL=find(this.visual,'Leg_L'); this.legR=find(this.visual,'Leg_R'); this.head=find(this.visual,'HeadPivot');
     this.robe=find(this.visual,'RobePivot'); this.socketL=find(this.visual,'HandSocket_L'); this.socketR=find(this.visual,'HandSocket_R');
@@ -22,6 +25,7 @@ export class VisitorView {
     this.node.setPosition(position); this.node.setRotationFromEuler(0,yaw*degrees,0);
     this.phase+=delta*(moving?9:1);
     const action=state.action||'idle';
+    this.cushion.active=action==='sit';
     const age=Math.max(0,(time-state.actionStartedAt)/1000);
     let bend=0, armX=0, armZ=0, join=0, sit=0; let held='';
     if(action==='incense') {

@@ -61,6 +61,11 @@ export class Navigation {
     });
   }
 
+  // Public standability check for zone-slot filtering (matches route clearance rules).
+  standable(x: number, z: number): boolean {
+    return canStand(this.data, x, z, floorHeight(this.data, x, z), ROUTE_CLEARANCE);
+  }
+
   // Sample entire segments so diagonals and shortcuts cannot cross walls or skip stairs.
   clear(from: GroundPoint, to: GroundPoint, clearance = 0): boolean {
     let y = floorHeight(this.data, from.x, from.z);

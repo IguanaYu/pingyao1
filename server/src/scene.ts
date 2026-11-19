@@ -4,17 +4,18 @@ import path from "node:path";
 
 export type Point = [number, number, number];
 export interface Area { xMin: number; xMax: number; zMin: number; zMax: number }
-export interface Station {
-  id: string; kind: string; name: string; position: Point; yaw: number; radius: number;
-  propPosition?: Point; flowerPosition?: Point; fruitPosition?: Point;
+export interface Zone {
+  kind: string; name: string; yaw: number; spacing: number;
+  rect: Area;
+  placements?: Record<string, Point[]>;
 }
 export interface SceneConfig {
   version: number; bounds: Area; groundY: number; playerRadius: number;
-  spawn: Point; spawnYaw: number;
+  spawn: Point; spawnYaw: number; spawnArea?: Area;
   surfaces: (Area & { height: number })[];
   ramps: (Area & { lowZ: number; highZ: number; lowY: number; highY: number })[];
   collisions: (Area & { yMin: number; yMax: number; id?: string })[];
-  stations: Station[];
+  zones: Zone[];
 }
 export const serverRoot = fileURLToPath(new URL("../", import.meta.url));
 export const scenePath = path.resolve(serverRoot, "../shared/scene.json");
@@ -50,4 +51,69 @@ export function clearMove(fromX: number, fromZ: number, x: number, z: number): b
     if (!canStand(fromX + (x - fromX) * t, fromZ + (z - fromZ) * t)) return false;
   }
   return true;
+}
+
+// ---- 区域制仪式：站位格子、选点与旧协议兼容 --------------------------------
+
+/** 旧协议 stationId → 区域内坐标（供旧打包网页客户端使用）。 */
+export const LEGACY_STATIONS: Record<string, { kind: string; x: number; z: number }> = {
+  offering: { kind: "offering", x: 0, z: -11.6 },
+  bow: { kind: "bow", x: 0, z: -18.8 },
+  sit: { kind: "sit", x: -11, z: -5 },
+  "sit-2": { kind: "sit", x: -11, z: -6.25 },
+  "sit-3": { kind: "sit", x: -11, z: -3.75 },
+};
+
+export interface Spot { x: number; z: number }
+
+export function zoneOf(kind: string): Zone | undefined {
+  return scene.zones.find(z => z.kind === kind);
+}
+
+export function insideZone(zone: Zone, x: number, z: number, margin = 0): boolean {
+  return inside(zone.rect, x, z, margin);
+}
+
+const PERSONAL_SPACE: Record<string, number> = { sit: 1.0, offering: 0.75, bow: 0.75 };
+
+const slotCache = new Map<Zone, Point[]>();
+/** 矩形内按 spacing 生成网格候选位（自 rect 角点起算），用 canStand 过滤。 */
+export function zoneSlots(zone: Zone): Point[] {
+  const cached = slotCache.get(zone);
+  if (cached) return cached;
+  const { rect, spacing } = zone;
+  const points: Point[] = [];
+  for (let j = 0; ; j++) {
+    const z = rect.zMin + j * spacing;
+    if (z > rect.zMax + 1e-6) break;
+    for (let i = 0; ; i++) {
+      const x = rect.xMin + i * spacing;
+      if (x > rect.xMax + 1e-6) break;
+      if (canStand(x, z)) points.push([x, groundHeight(x, z), z]);
+    }
+  }
+  slotCache.set(zone, points);
+  return points;
+}
+
+/**
+ * 为玩家挑一个位置：优先选离 prefer 最近、与所有人距离达标的空格；
+ * 全满则区域内随机采样取"离人最远"者；兜底区域中心。
+ */
+export function pickSpot(zone: Zone, others: { x: number; z: number }[], preferX?: number, preferZ?: number): Spot {
+  const space = PERSONAL_SPACE[zone.kind] ?? 0.75;
+  const prefer = { x: preferX ?? (zone.rect.xMin + zone.rect.xMax) / 2, z: preferZ ?? (zone.rect.zMin + zone.rect.zMax) / 2 };
+  const free = (x: number, z: number) => others.every(o => Math.hypot(o.x - x, o.z - z) >= space);
+  const slots = zoneSlots(zone).filter(([x, , z]) => free(x, z))
+    .sort((a, b) => Math.hypot(a[0] - prefer.x, a[2] - prefer.z) - Math.hypot(b[0] - prefer.x, b[2] - prefer.z));
+  if (slots.length) return { x: slots[0][0], z: slots[0][2] };
+  let best: Spot = { x: prefer.x, z: prefer.z }, bestScore = -1;
+  for (let i = 0; i < 24; i++) {
+    const x = zone.rect.xMin + Math.random() * (zone.rect.xMax - zone.rect.xMin);
+    const z = zone.rect.zMin + Math.random() * (zone.rect.zMax - zone.rect.zMin);
+    if (!canStand(x, z)) continue;
+    const score = others.reduce((min, o) => Math.min(min, Math.hypot(o.x - x, o.z - z)), Infinity);
+    if (score > bestScore) { bestScore = score; best = { x, z }; }
+  }
+  return best;
 }

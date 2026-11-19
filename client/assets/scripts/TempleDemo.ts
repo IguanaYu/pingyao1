@@ -5,10 +5,11 @@ import {Navigation,floorHeight,type GroundPoint} from './Navigation';
 import {VisitorView} from './Visitors';
 const {ccclass}=_decorator;
 const SPEED=3.1;
-interface Station { id:string; kind:string; name:string; position:[number,number,number]; }
-interface Ritual { kind:string; station:Station; offeringType?:string; tried?:Set<string>; }
-const stationPoint=(s:Station):GroundPoint=>({x:s.position[0],z:s.position[2]});
-const heading:Record<string,string>={bow:'前往正殿…',offering:'前往供案…',sit:'前往蒲团…'};
+interface ZoneRect { xMin:number;xMax:number;zMin:number;zMax:number }
+interface Zone { kind:string; name:string; yaw:number; spacing:number; rect:ZoneRect }
+interface Spot { x:number;z:number;yaw:number }
+interface Ritual { kind:string; spot:Spot; offeringType?:string }
+const heading:Record<string,string>={bow:'前往正殿…',offering:'前往供案…',sit:'前往静坐区…'};
 function angle(a:number,b:number,t:number){let d=(b-a+Math.PI*3)%(Math.PI*2)-Math.PI;return a+d*t;}
 
 @ccclass('TempleDemo')
@@ -32,14 +33,14 @@ export class TempleDemo extends Component {
       const prefabs=await new Promise<Prefab[]>((resolve,reject)=>resources.loadDir('models',Prefab,(e,a)=>e?reject(e):resolve(a)));
       const temple=prefabs.find(p=>/temple/i.test(p.name));this.visitorPrefab=prefabs.find(p=>/visitor/i.test(p.name))!;
       if(!temple||!this.visitorPrefab)throw new Error('模型未加载：'+prefabs.map(p=>p.name).join(','));
-      this.world=new DemoWorld(scene,this.data,temple);this.localPosition=V(this.data.spawn);this.localYaw=this.data.spawnYaw;this.updateCamera(1);this.cuteStatues();this.ready=true;this.ui.setReady();
+      this.world=new DemoWorld(scene,this.data,temple);const area=this.data.spawnArea as ZoneRect|undefined;this.localPosition=area?new Vec3((area.xMin+area.xMax)/2,this.data.groundY??0.08,(area.zMin+area.zMax)/2):V(this.data.spawn);this.localYaw=this.data.spawnYaw;this.updateCamera(1);this.cuteStatues();this.ready=true;this.ui.setReady();
       (window as any).templeDemo=this;
     }catch(e:any){console.error(e);this.ui.loading('庙院加载失败，请刷新后重试。'+(e.message||''));}
   }
-  /** 神像萌化：隐藏旧脸/须发（按材质），换上与玩家一致的圆润头部。袍服、金冠等原样保留。 */
+  /** 神像萌化：隐藏旧脸/须发（按材质），换上与玩家一致的圆润头部。袍服、金冠等原样保留。
+   * 正殿主像已换 v03 简化圆脸实体模型（自带五官），不再叠加萌化头；其余配像保留。 */
   private static readonly HIDE_MATS=/^(st_(skin|pupil|lip|hair|white_hair)|aux_(skin|darkskin|redface|teeth|mouth|pale))/;
   private static readonly CUTE_HEADS:[number,number,number,number,number,string,string][]=[
-    [0,2.93,-23.005,.235,0,'#7a4120','#080b09'],
     [-2.5,2.705,-22.96,.227,0,'#855a33','#85866c'],
     [2.5,2.705,-22.96,.227,0,'#6b3a22','#080b09'],
     [-4.65,2.75,-22.98,.235,0,'#7d3a24','#080b09'],
@@ -83,11 +84,8 @@ export class TempleDemo extends Component {
         }
       });
       room.onMessage('actionRejected',(m:any)=>{
-        const pending=this.pendingStart;
         this.pendingStart=null;
-        if(m.reason==='occupied'&&pending?.ritual?.kind==='sit'){
-          this.chooseStation('sit',undefined,pending.ritual.tried);
-        }else this.ui.toast(m.text);
+        this.ui.toast(m.text);
       });
       room.onMessage('event',(m:any)=>{if(m.type==='actionCompleted'){this.ui.chime();this.ui.toast(m.kind==='incense'?'敬香完成':m.kind==='offering'?'供物已安放':'礼敬完成');}});
       room.onLeave(()=>{if(this.room===room){this.room=null;this.resetWalk();this.ui.disconnected('连接已断开，点击“重新进入”返回院子');}});
@@ -139,21 +137,50 @@ export class TempleDemo extends Component {
     if(kind==='incense'){
       this.flushStop();this.stopWalk();this.requestAction('incense',null);return;
     }
-    this.chooseStation(kind,offeringType);
+    this.chooseSpot(kind,offeringType);
   }
-  private chooseStation(kind:string,offeringType?:string,tried=new Set<string>()){
-    const occupied=new Set<string>();
-    this.room?.state?.players?.forEach((p:any)=>{if(p.stationId)occupied.add(p.stationId);});
-    const stations=(this.data.stations as Station[]).filter(s=>s.kind===kind);
-    const available=stations.filter(s=>!occupied.has(s.id)&&!tried.has(s.id))
-      .sort((a,b)=>Math.hypot(this.localPosition.x-a.position[0],this.localPosition.z-a.position[2])-Math.hypot(this.localPosition.x-b.position[0],this.localPosition.z-b.position[2]));
-    for(const station of available){
-      const path=this.navigation.path(this.localPosition,stationPoint(station));
-      if(path){
-        tried.add(station.id);this.setPath(path,{kind,station,offeringType,tried});return;
+  private zoneOf(kind:string):Zone|undefined{ return (this.data.zones as Zone[]|undefined)?.find(z=>z.kind===kind); }
+  /** 区域内按 spacing 生成候选位（与服务器同一套角点网格），用可行走判定过滤。 */
+  private zoneSpots(zone:Zone):Spot[]{
+    const spots:Spot[]=[];
+    for(let j=0;;j++){
+      const z=zone.rect.zMin+j*zone.spacing;
+      if(z>zone.rect.zMax+1e-6)break;
+      for(let i=0;;i++){
+        const x=zone.rect.xMin+i*zone.spacing;
+        if(x>zone.rect.xMax+1e-6)break;
+        if(this.navigation.standable(x,z))spots.push({x,z,yaw:zone.yaw});
       }
     }
-    this.ui.toast(available.length?'暂时找不到通往仪式位置的路。':kind==='sit'?'蒲团暂时坐满了，请稍等。':'这里有人正在使用，请稍等。');
+    return spots;
+  }
+  private chooseSpot(kind:string,offeringType?:string){
+    const zone=this.zoneOf(kind);
+    if(!zone){this.ui.toast('请选择有效的仪式。');return;}
+    const space=kind==='sit'?1.0:0.75;
+    const others:any[]=[];
+    this.room?.state?.players?.forEach((p:any)=>{if(p.id!==this.room.sessionId)others.push(p);});
+    const free=(s:Spot)=>others.every(p=>Math.hypot(p.x-s.x,p.z-s.z)>=space);
+    const spots=this.zoneSpots(zone).filter(free)
+      .sort((a,b)=>Math.hypot(this.localPosition.x-a.x,this.localPosition.z-a.z)-Math.hypot(this.localPosition.x-b.x,this.localPosition.z-b.z));
+    for(const spot of spots){
+      const path=this.navigation.path(this.localPosition,spot);
+      if(path){this.setPath(path,{kind,spot,offeringType});return;}
+    }
+    // 空位全满（或暂不可达）：区域内随机采样取“离人最远”的点，不再提示坐满。
+    let best:Spot|null=null,bestScore=-1;
+    for(let i=0;i<24;i++){
+      const x=zone.rect.xMin+Math.random()*(zone.rect.xMax-zone.rect.xMin);
+      const z=zone.rect.zMin+Math.random()*(zone.rect.zMax-zone.rect.zMin);
+      if(!this.navigation.standable(x,z))continue;
+      const score=others.reduce((m,p)=>Math.min(m,Math.hypot(p.x-x,p.z-z)),Infinity);
+      if(score>bestScore){bestScore=score;best={x,z,yaw:zone.yaw};}
+    }
+    if(best){
+      const path=this.navigation.path(this.localPosition,best);
+      if(path){this.setPath(path,{kind,spot:best,offeringType});return;}
+    }
+    this.ui.toast('暂时找不到通往仪式位置的路。');
   }
   private sendPosition(moving:boolean){
     const p=this.localPosition;
@@ -163,7 +190,7 @@ export class TempleDemo extends Component {
   private flushStop(){ if(this.moving||this.lastMoving)this.sendPosition(false); }
   private requestAction(kind:string,ritual:Ritual|null){
     this.pendingStart={kind,ritual,until:Date.now()+3000};
-    this.room.send('act',{kind,stationId:ritual?.station.id,offeringType:ritual?.offeringType});
+    this.room.send('act',{kind,x:ritual?.spot.x,z:ritual?.spot.z,offeringType:ritual?.offeringType});
   }
   private advanceWalk(delta:number){
     if(this.pendingStart&&Date.now()>this.pendingStart.until){this.pendingStart=null;this.ui.toast('仪式未开始，可以再点一次。');}

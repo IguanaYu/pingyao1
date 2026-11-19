@@ -1,4 +1,4 @@
-# 多人协议 v2
+# 多人协议 v3
 
 Colyseus SDK：`@colyseus/sdk` 0.18.10。客户端进入：
 
@@ -21,7 +21,8 @@ id, nickname
 x, y, z, yaw, moving
 action: idle | incense | bow | offering | sit
 actionStartedAt, actionEndsAt
-stationId, offeringType: '' | flower | fruit
+stationId（v3 起恒为空字符串，仅为兼容保留）
+offeringType: '' | flower | fruit
 ```
 
 坐标遵循相邻 `shared/scene.json`：Y 向上、北为 -Z，yaw=0 时面向 +Z。`y` 由服务器根据地面、平台及坡面计算。
@@ -29,29 +30,38 @@ stationId, offeringType: '' | flower | fruit
 公共物件：
 
 ```text
-id, kind: offering
+id（`${offeringType}-${序号}`，v3 起支持同类型多件并存）
+kind: offering
 offeringType: '' | flower | fruit
 ownerId, x, y, z, yaw, createdAt, expiresAt
 ```
 
-`offerings` 以 `flower`、`fruit` 为键。位置为模型摆放锚点。客户端按 `expiresAt` 和 `serverTime` 播放与显示，晚加入者会收到完整当前状态。
+`offerings` 以物件 id 为键，位置为案面摆物锚点（`scene.json` 的 `zones[].placements`，花、果各 4 点，同类型 4 点全满时替换最旧一件）。客户端按 `expiresAt` 和 `serverTime` 播放与显示，晚加入者会收到完整当前状态。
 
 ## 客户端消息
 
 | 类型 | 数据 | 说明 |
 |---|---|---|
 | `move` | `{x, y, z, yaw, moving}` | 建议每秒 10—20 次，服务器验证速度、范围、碰撞与高度变化；`y` 会重新计算 |
-| `act` | `{kind, stationId?, offeringType?}` | `incense` 原地开始且无需站位；`bow`、`offering`、`sit` 需到达所填站位；`offeringType` 为 `flower` 或 `fruit` |
-| `cancel` | `{}` | 取消当前动作并释放站位 |
-| `stand` | `{}` | 起身并释放坐位 |
+| `act` | `{kind, x?, z?, stationId?(旧), offeringType?}` | `incense` 原地开始且无需位置；`bow`、`offering`、`sit` 需到达 `(x, z)` 所指的区域位置。旧客户端仍可发 `stationId`（`offering`/`bow`/`sit`/`sit-2`/`sit-3`），服务器映射为区域内坐标；`offeringType` 为 `flower` 或 `fruit` |
+| `cancel` | `{}` | 取消当前动作 |
+| `stand` | `{}` | 起身 |
 
-动作期间服务器保持角色在最后确认的位置并忽略移动消息；客户端要移动时先发送 `cancel` 或 `stand`。定点动作开始时调整朝向，不会传送角色。敬香 4800ms、礼敬 3400ms、献供 3500ms；静坐持续到起身或离开。敬香在客户端显示手持香和烟效。供物在献供成功结束时生成，提前取消不会生成。
+动作期间服务器保持角色在最后确认的位置并忽略移动消息；客户端要移动时先发送 `cancel` 或 `stand`。区域动作开始时调整朝向。敬香 4800ms、礼敬 3400ms、献供 3500ms；静坐持续到起身或离开。敬香在客户端显示手持香和烟效。供物在献供成功结束时生成，提前取消不会生成。
 
-站位由 `scene.json` 提供：`offering`、`bow`、`sit`、`sit-2`、`sit-3`。
+仪式位置由 `scene.json` 的 `zones` 提供（v3 起为区域制）：
+
+- `offering` 献供：献殿供案前矩形，多人各站一格；
+- `bow` 礼敬：正殿栏杆前矩形；
+- `sit` 静坐：西侧空地矩形，随身蒲团随处可坐。
+
+**冲突挪位**：`act` 的声称点被他人占用（0.6m 内有其他玩家）时不再返回 `occupied`，服务器直接把该玩家对齐到区域内最近的空位（更新 `x/y/z/yaw`，schema 广播后客户端自动对齐），动作照常开始。
+
+出生点在 `scene.json` 的 `spawnArea`（门内南侧空地）内随机选取，保证与在场玩家间距 ≥ 1.0m。
 
 ## 服务端消息
 
-- `actionRejected: {reason,text}`：未到位、占用或操作不符等提示；`occupied` 表示站位已被占用。
+- `actionRejected: {reason,text}`：`invalid`（仪式或位置无效）、`notArrived`（未走到区域内）、`busy`（已有动作进行中）等；v3 起不再有 `occupied`。
 - `correction: {x,y,z,yaw}`：位置被拒绝，客户端应修正本地预测。
 - `event`：`joined`、`actionStarted`、`actionCompleted`、`actionCancelled`，可用于提示；画面恢复以持续状态为准。
 

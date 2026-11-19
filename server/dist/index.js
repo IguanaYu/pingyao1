@@ -22,10 +22,10 @@ app.use((req, res, next) => {
     }
     next();
 });
-app.get("/health", (_req, res) => res.json({ ok: true, room: "temple", protocolVersion: 2 }));
+app.get("/health", (_req, res) => res.json({ ok: true, room: "temple", protocolVersion: 3 }));
 app.get("/runtime-config.json", (_req, res) => {
     res.setHeader("Cache-Control", "no-store");
-    res.json({ serverUrl: process.env.NETWORK_URL || "auto", roomName: "temple", protocolVersion: 2 });
+    res.json({ serverUrl: process.env.NETWORK_URL || "auto", roomName: "temple", protocolVersion: 3 });
 });
 app.get("/scene.json", (_req, res) => res.sendFile(scenePath));
 app.get("/api/scene", (_req, res) => res.json(scene));
