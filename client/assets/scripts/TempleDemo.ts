@@ -193,11 +193,6 @@ export class TempleDemo extends Component {
     this.visitors.forEach((v,id)=>{if(!alive.has(id)){v.destroy();this.visitors.delete(id);this.ui.removeLabel(id);}});
     if(state?.players){this.world.syncObjects(this.room);this.countTime+=delta;if(this.countTime>.3){this.ui.connection(`${state.players.size} 人同游`,true);this.countTime=0;}}
     this.updateCamera(delta);
-    for(const s of this.data.stations){
-      if(s.kind==='incense')continue;
-      const label=this.world.project(this.camera,V(s.position).add(new Vec3(0,.35,0)));
-      this.ui.label('station-'+s.id,s.name,label.x,label.y,label.visible&&(s.id==='sit'||s.kind!=='sit'));
-    }
     const progress=own?.actionEndsAt>own?.actionStartedAt?(time-own.actionStartedAt)/(own.actionEndsAt-own.actionStartedAt):0;
     const status=this.ritual?heading[this.ritual.kind]:this.pendingStart?'正在开始…':'';
     const hint=this.path.length?'行走中 · 点击其他地面可改道':'点击地面行走 · 点击下方按钮参与仪式';

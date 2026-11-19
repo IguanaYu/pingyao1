@@ -31,9 +31,9 @@ export class DemoInterface {
     this.root = document.createElement('div'); this.root.id = 'temple-ui';
     this.root.innerHTML = `
     <div class="topbar"><div class="brand"><small>PINGYAO · CHENGHUANG</small><h1>平遥城隍庙</h1></div><div class="tools"><div class="status-pill" id="connection"><i class="status-dot"></i><span>尚未入院</span></div><button class="tool reconnect" id="reconnect">重新进入</button><button class="tool" id="overview">院落全景</button><button class="tool" id="route">游览指引</button><button class="tool sound" id="sound" aria-label="环境声音">♪</button></div></div>
-    <div class="caption">一院清风，一份心意</div><div class="modal-route" id="route-panel"><h3>游庙小记</h3><p><strong>原地 · 敬香</strong><br>献殿供案 · 献花献果<br>城隍殿前 · 礼敬<br>西侧蒲团 · 静坐<br><br>点击地面行走，点仪式自动前往。<br>手机滑动／电脑右键拖动：转动视角。</p></div>
-    <div id="world-labels"></div><div class="control-help">点击地面 · 行走<br>手机滑动／电脑右键拖动 · 转视角</div>
-    <div class="bottom-bar"><div class="progress" id="progress"><span id="progress-text"></span><button id="cancel">取消</button><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div></div><div class="offer-picker" id="offer-picker"><button id="flower">献一束鲜花</button><button id="fruit">献一盘鲜果</button></div><div class="action-hint" id="action-hint">点击地面行走 · 点击下方按钮参与仪式</div><div class="actions">${['incense','bow','offering','sit'].map((key,i)=>`<button class="rite" id="action-${key}" data-action="${key}">${svg(key)}<b>${['敬香','礼敬','献供','静坐'][i]}</b></button>`).join('')}</div></div>
+    <div class="modal-route" id="route-panel"><h3>游庙小记</h3><p><strong>原地 · 敬香</strong><br>献殿供案 · 献花献果<br>城隍殿前 · 礼敬<br>西侧蒲团 · 静坐<br><br>点击地面行走，点仪式自动前往。<br>手机滑动／电脑右键拖动：转动视角。</p></div>
+    <div id="world-labels"></div>
+    <div class="bottom-bar"><div class="progress" id="progress"><span id="progress-text"></span><button id="cancel">取消</button><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div></div><div class="offer-picker" id="offer-picker"><button id="flower">献一束鲜花</button><button id="fruit">献一盘鲜果</button></div><div class="actions">${['incense','bow','offering','sit'].map((key,i)=>`<button class="rite" id="action-${key}" data-action="${key}">${svg(key)}<b>${['敬香','礼敬','献供','静坐'][i]}</b></button>`).join('')}</div></div>
     <div class="welcome-shade" id="welcome"><div class="welcome"><div class="eyebrow">相 遇 · 平 遥</div><h2>入一方清静<br>留一份心意</h2><p>与同游者走进城隍庙，敬香、礼敬、献供，或在廊边静坐片刻。</p><label for="nickname">怎么称呼你</label><input id="nickname" maxlength="12" autocomplete="nickname" placeholder="留一个雅称" value="访客${Math.floor(Math.random()*900+100)}"><button class="enter" id="enter" disabled>正在准备庙院…</button><p class="welcome-note" id="welcome-note">建筑与小人加载中，请稍候</p></div></div><div class="toast" id="toast" role="status"></div>`;
     document.body.appendChild(this.root);
     this.el('enter').addEventListener('click', () => this.join());
@@ -60,13 +60,12 @@ export class DemoInterface {
   disconnected(text: string) { this.connection('连接已断开',false); this.el('reconnect').style.display='inline-block'; (this.el('enter') as HTMLButtonElement).disabled=false; this.el('enter').textContent='重新进入'; this.el('welcome-note').textContent=text; this.toast(text); }
   toast(text: string) { const e=this.el('toast'); e.textContent=text; e.style.opacity='1'; clearTimeout(this.noticeTimer); this.noticeTimer=setTimeout(()=>e.style.opacity='0',3200); }
   closeOffering() { this.el('offer-picker').style.display='none'; }
-  state(action: string, progress: number, hint: string, heading: string) {
+  state(action: string, progress: number, _hint: string, heading: string) {
     const names: any={incense:'正在敬香',bow:'正在礼敬',offering:'正在献供',sit:'静坐片刻，听一院清风'};
     this.el('progress').style.display=(action!=='idle'||heading)?'flex':'none';
     this.el('progress-text').textContent=names[action]||heading;
     this.el('cancel').textContent=action==='sit'?'起身':'取消';
     this.el('progress-fill').style.width=`${Math.max(0,Math.min(1,progress))*100}%`;
-    this.el('action-hint').textContent=hint;
     for(const key of ['incense','bow','offering','sit']) this.el(`action-${key}`).classList.toggle('near',key===action);
   }
   overview(enabled: boolean) { this.el('overview').textContent=enabled?'返回人物':'院落全景'; }
